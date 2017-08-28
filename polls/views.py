@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 
 from django.urls import reverse
 
+
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
 
@@ -20,13 +21,15 @@ def index(request):
 
 
 def detail(request, question_id):
-
     question = get_object_or_404(Question, pk=question_id)
 
-    return render(request, 'polls/detail.html', {'question':question})
+    return render(request, 'polls/detail.html', {'question': question})
+
+
 def results(request, question_id):
-    response = "You are looking at the results of question %s"
-    return HttpResponse(response % question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
+
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -42,6 +45,4 @@ def vote(request, question_id):
         selected_choice.votes += 1
         selected_choice.save()
 
-        return HttpResponseRedirect(reverse('polls:results',args=(question.id,)))
-
-
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
